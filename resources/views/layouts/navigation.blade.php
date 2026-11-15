@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav class="bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -54,21 +54,21 @@
                     </div>
                 @else
                     <div class="space-x-4">
-                        <a href="#" class="text-sm text-gray-700 hover:text-gray-900 font-medium">Iniciar sesión</a>
-                        <a href="#"
+                        <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-gray-900 font-medium">Iniciar sesión</a>
+                        <a href="{{ route('register') }}"
                             class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 transition">Registrarse</a>
                     </div>
                 @endauth
             </div>
 
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
+                <button type="button" data-mobile-menu-toggle aria-controls="mobile-menu" aria-expanded="false"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
+                        <path data-menu-icon="open" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
+                        <path data-menu-icon="close" class="hidden" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div id="mobile-menu" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <a href="{{ route('home') }}"
                 class="block w-full ps-3 pe-4 py-2 border-l-4 border-green-400 text-start text-base font-medium text-green-700 bg-green-50">
@@ -91,5 +91,19 @@
                 Puntos de Recepción
             </a>
         </div>
+        @guest
+            <div class="border-t border-gray-200 pt-4 pb-3">
+                <div class="space-y-1 px-4">
+                    <a href="{{ route('login') }}"
+                        class="block w-full rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        Iniciar sesión
+                    </a>
+                    <a href="{{ route('register') }}"
+                        class="block w-full rounded-md bg-green-600 px-3 py-2 text-base font-semibold text-white hover:bg-green-700">
+                        Registrarse
+                    </a>
+                </div>
+            </div>
+        @endguest
     </div>
 </nav>
