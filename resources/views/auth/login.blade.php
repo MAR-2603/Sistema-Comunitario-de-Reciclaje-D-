@@ -6,19 +6,25 @@
 <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-100">
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
 
-    <form method="POST" action="{{ route('login') }}" class="space-y-4">
+    <form method="POST" action="{{ route('login.store') }}" class="space-y-4">
         @csrf
 
         <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus 
-                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                   class="w-full px-4 py-2 border @error('email') border-red-500 @else border-gray-300 @enderror rounded-md focus:ring-green-500 focus:border-green-500">
+            @error('email')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
         <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-            <input type="password" id="password" name="password" required 
-                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+            <input type="password" id="password" name="password" required autocomplete="current-password"
+                   class="w-full px-4 py-2 border @error('password') border-red-500 @else border-gray-300 @enderror rounded-md focus:ring-green-500 focus:border-green-500">
+            @error('password')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="flex items-center justify-between text-sm">

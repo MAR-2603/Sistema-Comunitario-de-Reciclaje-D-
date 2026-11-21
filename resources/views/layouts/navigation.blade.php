@@ -44,13 +44,15 @@
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
-                    <div class="relative">
-                        <span class="inline-flex rounded-md">
-                            <button type="button"
-                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
-                                {{ Auth::user()->name }}
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-medium text-gray-700">{{ Auth::user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="text-sm font-medium text-gray-500 hover:text-red-600 transition">
+                                Cerrar sesión
                             </button>
-                        </span>
+                        </form>
                     </div>
                 @else
                     <div class="space-x-4">
@@ -89,6 +91,18 @@
                 class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50">
                 Puntos de Recepción
             </a>
+        </div>
+        <div class="pt-3 pb-3 border-t border-gray-200 px-4">
+            @auth
+                <p class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</p>
+                <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                    @csrf
+                    <button type="submit" class="text-base font-medium text-gray-600 hover:text-red-600">Cerrar sesión</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="block py-2 text-base font-medium text-gray-600 hover:text-gray-800">Iniciar sesión</a>
+                <a href="{{ route('register') }}" class="block py-2 text-base font-medium text-green-700 hover:text-green-800">Registrarse</a>
+            @endauth
         </div>
     </div>
 </nav>
