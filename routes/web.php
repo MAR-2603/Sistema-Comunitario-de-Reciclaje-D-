@@ -24,3 +24,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 });
+
+// Panel de administración (T05): solo el rol admin. Cualquier otro usuario
+// recibe la página 403. Las secciones del panel se agregan en el Sprint 2 (T17, T18).
+Route::middleware(['auth', 'rol:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::view('/', 'admin.panel')->name('panel');
+});
