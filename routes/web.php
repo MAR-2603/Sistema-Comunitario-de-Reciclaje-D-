@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\PanelController;
+use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistroController;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +32,11 @@ Route::middleware('auth')->group(function () {
 // suma además su permiso con 'can:'. Nombres de ruta: admin.*
 Route::middleware(['auth', 'rol:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', PanelController::class)->name('panel');
+
+    // Usuarios y roles (T17)
+    Route::middleware('can:usuarios.gestionar')->prefix('usuarios')->name('usuarios.')->group(function () {
+        Route::get('/', [UsuarioController::class, 'index'])->name('index');
+        Route::patch('/{usuario}/rol', [UsuarioController::class, 'actualizarRol'])->name('rol');
+        Route::patch('/{usuario}/estado', [UsuarioController::class, 'cambiarEstado'])->name('estado');
+    });
 });

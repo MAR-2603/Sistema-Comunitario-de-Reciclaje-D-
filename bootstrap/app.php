@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'rol' => \App\Http\Middleware\VerificarRol::class,
         ]);
+
+        // Cuentas desactivadas (T17): se cierra su sesión en el siguiente clic.
+        $middleware->web(append: [
+            \App\Http\Middleware\CerrarSesionSiInactivo::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
