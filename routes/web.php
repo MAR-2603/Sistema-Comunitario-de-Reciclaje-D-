@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegistroController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,9 +14,8 @@ Route::match(['get', 'post'], '/login', function () {
     return view('auth.login');
 })->name('login');
 
-Route::match(['get', 'post'], '/register', function () {
-    if (request()->isMethod('post')) {
-        return 'Datos de registro recibidos correctamente (en desarrollo)';
-    }
-    return view('auth.register');
-})->name('register');
+// Registro de vecinos (T03). Solo para visitantes que no iniciaron sesión.
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegistroController::class, 'create'])->name('register');
+    Route::post('/register', [RegistroController::class, 'store'])->name('register.store');
+});

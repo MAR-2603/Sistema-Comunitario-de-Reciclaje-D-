@@ -54,8 +54,8 @@
                     </div>
                 @else
                     <div class="space-x-4">
-                        <a href="#" class="text-sm text-gray-700 hover:text-gray-900 font-medium">Iniciar sesión</a>
-                        <a href="#" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 transition">Registrarse</a>
+                        <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-gray-900 font-medium">Iniciar sesión</a>
+                        <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 transition">Registrarse</a>
                     </div>
                 @endauth
             </div>
