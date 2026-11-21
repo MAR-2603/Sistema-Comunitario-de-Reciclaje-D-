@@ -55,3 +55,6 @@ jobs:
 
       - name: Compilar frontend
         run: npm run build
+
+      - name: Ejecutar pruebas de Laravel
+        run: php artisan test
