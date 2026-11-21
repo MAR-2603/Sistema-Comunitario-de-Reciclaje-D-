@@ -21,6 +21,18 @@ class FotoMaterialServiceTest extends TestCase
         return UploadedFile::fake()->createWithContent($nombre, $png);
     }
 
+    /**
+     * Archivo subido REAL (no "fake"): Laravel detecta su tipo leyendo el
+     * contenido, igual que en una subida verdadera desde el navegador.
+     */
+    private function archivoReal(string $nombre, string $contenido): UploadedFile
+    {
+        $ruta = tempnam(sys_get_temp_dir(), 'subida');
+        file_put_contents($ruta, $contenido);
+
+        return new UploadedFile($ruta, $nombre, null, null, true);
+    }
+
     private function valida(UploadedFile $archivo): bool
     {
         return Validator::make(['foto' => $archivo], ['foto' => FotoMaterialService::reglas()])->passes();
@@ -80,17 +92,20 @@ class FotoMaterialServiceTest extends TestCase
     public function test_acepta_una_imagen_y_la_foto_es_opcional(): void
     {
         $this->assertTrue($this->valida($this->imagen()));
+        $png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+        $this->assertTrue($this->valida($this->archivoReal('foto-real.png', $png)));
         $this->assertTrue(Validator::make([], ['foto' => FotoMaterialService::reglas()])->passes());
     }
 
     public function test_rechaza_un_archivo_que_no_es_imagen(): void
     {
-        $this->assertFalse($this->valida(UploadedFile::fake()->createWithContent('documento.pdf', '%PDF-1.4 contenido')));
+        $this->assertFalse($this->valida($this->archivoReal('documento.pdf', "%PDF-1.4\n%contenido de prueba\n")));
     }
 
     public function test_rechaza_un_php_renombrado_como_jpg(): void
     {
-        $this->assertFalse($this->valida(UploadedFile::fake()->createWithContent('foto.jpg', '<?php echo "hola"; ?>')));
+        // Un script PHP con nombre de foto: el contenido no es una imagen.
+        $this->assertFalse($this->valida($this->archivoReal('foto.jpg', '<?php echo "hola"; ?>')));
     }
 
     public function test_rechaza_una_foto_de_mas_de_2_mb(): void
