@@ -54,4 +54,4 @@ jobs:
         run: npm ci
 
       - name: Compilar frontend
-        run: npm run build+
+        run: npm run build
