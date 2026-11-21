@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,5 +30,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function (User $user, string $ability) {
             return $user->tienePermiso($ability) ? true : null;
         });
+
+        // Despliegue (T21): en producción todos los enlaces usan https://.
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }

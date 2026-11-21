@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'rol' => \App\Http\Middleware\VerificarRol::class,
         ]);
 
+        // Despliegue (T21): Railway atiende HTTPS en su proxy y le pasa la
+        // petición a Laravel. Confiar en ese proxy hace que Laravel sepa que la
+        // conexión original era HTTPS y genere enlaces y formularios https://.
+        $middleware->trustProxies(at: '*');
+
         // Cuentas desactivadas (T17): se cierra su sesión en el siguiente clic.
         $middleware->web(append: [
             \App\Http\Middleware\CerrarSesionSiInactivo::class,
