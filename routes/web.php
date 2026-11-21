@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PanelController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistroController;
 use Illuminate\Support\Facades\Route;
@@ -25,8 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 });
 
-// Panel de administración (T05): solo el rol admin. Cualquier otro usuario
-// recibe la página 403. Las secciones del panel se agregan en el Sprint 2 (T17, T18).
+// Panel de administración (T05, T18): todas las rutas /admin/... pasan por
+// 'auth' (invitado -> login) y 'rol:admin' (otro rol -> 403). Cada sección
+// suma además su permiso con 'can:'. Nombres de ruta: admin.*
 Route::middleware(['auth', 'rol:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::view('/', 'admin.panel')->name('panel');
+    Route::get('/', PanelController::class)->name('panel');
 });
