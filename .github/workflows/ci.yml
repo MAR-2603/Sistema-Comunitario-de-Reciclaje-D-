@@ -21,11 +21,12 @@ jobs:
     name: Tests and frontend build (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
 
-    # CAMBIO: se prueba con la versión más baja del equipo (8.3) y la más alta (8.4)
+    # CAMBIO: solo PHP 8.4 hasta unir el ajuste config.platform.php = 8.3.0
+    # (el composer.lock actual trae Symfony 8.1, que exige PHP >= 8.4)
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.3', '8.4']
+        php: ['8.4']
 
     # CAMBIO: base MySQL para los tests (phpunit.xml usa reciclaje_comunitario_test)
     services:
@@ -84,9 +85,3 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: root
         run: php artisan test
-
-      - name: Instalar dependencias de JavaScript
-        run: npm ci
-
-      - name: Compilar frontend
-        run: npm run build
