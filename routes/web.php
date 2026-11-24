@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\PanelController;
+use App\Http\Controllers\Admin\SolicitudController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistroController;
+use App\Http\Controllers\Recolector\RetiroController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -39,4 +41,17 @@ Route::middleware(['auth', 'rol:admin'])->prefix('admin')->name('admin.')->group
         Route::patch('/{usuario}/rol', [UsuarioController::class, 'actualizarRol'])->name('rol');
         Route::patch('/{usuario}/estado', [UsuarioController::class, 'cambiarEstado'])->name('estado');
     });
+
+    // Solicitudes de retiro (T33): asignar recolector y rechazar con motivo.
+    Route::middleware('can:solicitudes.gestionar')->prefix('solicitudes')->name('solicitudes.')->group(function () {
+        Route::patch('/{solicitud}/asignar', [SolicitudController::class, 'asignar'])->name('asignar');
+        Route::patch('/{solicitud}/rechazar', [SolicitudController::class, 'rechazar'])->name('rechazar');
+    });
+});
+
+// Recolector (T33): ve solo sus retiros asignados y los completa cargando
+// los kg reales. Que la solicitud sea suya lo controla SolicitudRetiroPolicy.
+Route::middleware(['auth', 'rol:recolector'])->prefix('recolector')->name('recolector.')->group(function () {
+    Route::get('/retiros', [RetiroController::class, 'index'])->name('retiros.index');
+    Route::patch('/retiros/{solicitud}/completar', [RetiroController::class, 'completar'])->name('retiros.completar');
 });

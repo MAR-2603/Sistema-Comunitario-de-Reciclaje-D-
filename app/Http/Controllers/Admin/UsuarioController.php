@@ -60,7 +60,9 @@ class UsuarioController extends Controller
             return back()->with('error', 'No podés cambiar tu propio rol.');
         }
 
-        $usuario->update(['rol_id' => $request->validated('rol_id')]);
+        // rol_id no es asignable en masa (T35): se asigna explícitamente.
+        $usuario->rol_id = $request->validated('rol_id');
+        $usuario->save();
 
         return back()->with('status', "Rol de {$usuario->name} {$usuario->apellido} actualizado a {$usuario->fresh()->rol->nombre}.");
     }
@@ -74,7 +76,8 @@ class UsuarioController extends Controller
             return back()->with('error', 'No podés desactivar tu propia cuenta.');
         }
 
-        $usuario->update(['activo' => ! $usuario->activo]);
+        $usuario->activo = ! $usuario->activo;
+        $usuario->save();
 
         $accion = $usuario->activo ? 'reactivada' : 'desactivada';
 

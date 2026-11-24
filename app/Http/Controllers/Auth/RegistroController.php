@@ -35,15 +35,17 @@ class RegistroController extends Controller
 
         // Los campos se asignan uno por uno: así se ignora cualquier dato extra
         // que llegue en la petición (por ejemplo, alguien que agregue rol_id=1
-        // a mano para registrarse como administrador).
-        $user = User::create([
+        // a mano para registrarse como administrador). Además, rol_id no es
+        // asignable en masa: se fija aparte (T35).
+        $user = new User([
             'name' => $datos['name'],
             'apellido' => $datos['apellido'],
             'barrio_id' => $datos['barrio_id'],
             'email' => $datos['email'],
             'password' => $datos['password'], // el cast 'hashed' del modelo la cifra
-            'rol_id' => Rol::VECINO,
         ]);
+        $user->rol_id = Rol::VECINO;
+        $user->save();
 
         Auth::login($user);
         $request->session()->regenerate();

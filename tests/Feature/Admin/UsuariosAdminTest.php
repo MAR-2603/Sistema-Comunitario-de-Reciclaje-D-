@@ -95,7 +95,7 @@ class UsuariosAdminTest extends TestCase
 
     public function test_filtra_las_cuentas_dadas_de_baja(): void
     {
-        $this->usuario('diego@reciclaje.test')->update(['activo' => false]);
+        $this->usuario('diego@reciclaje.test')->forceFill(['activo' => false])->save();
 
         $this->actingAs($this->admin())
             ->get('/admin/usuarios?estado=inactivos')
@@ -180,7 +180,7 @@ class UsuariosAdminTest extends TestCase
         $this->actingAs($laura)->get('/')->assertOk();
 
         // El admin la desactiva mientras ella tiene la sesión abierta.
-        $laura->update(['activo' => false]);
+        $laura->forceFill(['activo' => false])->save();
 
         $this->get('/')
             ->assertRedirect(route('login'))

@@ -56,7 +56,7 @@ class LoginTest extends TestCase
 
     public function test_una_cuenta_desactivada_no_puede_entrar(): void
     {
-        $this->laura()->update(['activo' => false]);
+        $this->laura()->forceFill(['activo' => false])->save();
 
         $this->post('/login', ['email' => 'laura@reciclaje.test', 'password' => 'password'])
             ->assertSessionHasErrors('email');

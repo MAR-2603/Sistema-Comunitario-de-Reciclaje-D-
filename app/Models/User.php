@@ -10,8 +10,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'email', 'password','apellido','telefono','rol_id','barrio_id', 'direccion','activo'])]
+// rol_id y activo NO son asignables en masa (T35): solo los cambia el sistema
+// o un administrador, asignándolos uno por uno.
+#[Fillable(['name', 'email', 'password', 'apellido', 'telefono', 'barrio_id', 'direccion'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -46,9 +49,32 @@ class User extends Authenticatable
         return $this->belongsTo(Barrio::class);
     }
 
+    /** Materiales que publicó el vecino. */
+    public function materiales(): HasMany
+    {
+        return $this->hasMany(Material::class, 'user_id');
+    }
+
+    /** Solicitudes de retiro que pidió el vecino. */
+    public function solicitudes(): HasMany
+    {
+        return $this->hasMany(SolicitudRetiro::class, 'vecino_id');
+    }
+
+    /** Retiros que el administrador le asignó al recolector (T33). */
+    public function retirosAsignados(): HasMany
+    {
+        return $this->hasMany(SolicitudRetiro::class, 'recolector_id');
+    }
+
+    public function esRecolector(): bool
+    {
+        return (int) $this->rol_id === Rol::RECOLECTOR;
+    }
+
     public function esAdmin(): bool
     {
-        return $this->rol_id === Rol::ADMIN;
+        return (int) $this->rol_id === Rol::ADMIN;
     }
 
     public function tienePermiso(string $clave): bool
