@@ -38,19 +38,27 @@
                             class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300">
                             Mis Solicitudes
                         </a>
+                        @can('usuarios.gestionar')
+                            <a href="{{ route('admin.panel') }}"
+                                class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-green-700 hover:text-green-800 hover:border-green-300">
+                                Panel admin
+                            </a>
+                        @endcan
                     @endauth
                 </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
-                    <div class="relative">
-                        <span class="inline-flex rounded-md">
-                            <button type="button"
-                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
-                                {{ Auth::user()->name }}
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-medium text-gray-700">{{ Auth::user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="text-sm font-medium text-gray-500 hover:text-red-600 transition">
+                                Cerrar sesión
                             </button>
-                        </span>
+                        </form>
                     </div>
                 @else
                     <div class="space-x-4">
@@ -91,8 +99,16 @@
                 Puntos de Recepción
             </a>
         </div>
-        @guest
-            <div class="border-t border-gray-200 pt-4 pb-3">
+        <div class="border-t border-gray-200 pt-4 pb-3">
+            @auth
+                <div class="px-4">
+                    <p class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</p>
+                    <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                        @csrf
+                        <button type="submit" class="text-base font-medium text-gray-600 hover:text-red-600">Cerrar sesión</button>
+                    </form>
+                </div>
+            @else
                 <div class="space-y-1 px-4">
                     <a href="{{ route('login') }}"
                         class="block w-full rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900">
@@ -103,7 +119,7 @@
                         Registrarse
                     </a>
                 </div>
-            </div>
-        @endguest
+            @endauth
+        </div>
     </div>
 </nav>
