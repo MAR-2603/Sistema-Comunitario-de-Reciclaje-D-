@@ -12,8 +12,7 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-// Registro (T03) e inicio de sesión (T04): solo para visitantes que no
-// iniciaron sesión. Quien ya entró y visita estas páginas va al inicio.
+
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegistroController::class, 'create'])->name('register');
     Route::post('/register', [RegistroController::class, 'store'])->name('register.store');
@@ -55,3 +54,8 @@ Route::middleware(['auth', 'rol:recolector'])->prefix('recolector')->name('recol
     Route::get('/retiros', [RetiroController::class, 'index'])->name('retiros.index');
     Route::patch('/retiros/{solicitud}/completar', [RetiroController::class, 'completar'])->name('retiros.completar');
 });
+
+// Guía de categorías (vista de Alex). La parte con datos reales la suma Fabián (T10).
+Route::get('/categorias', function () {
+    return view('categories.index');
+})->name('categories.index');

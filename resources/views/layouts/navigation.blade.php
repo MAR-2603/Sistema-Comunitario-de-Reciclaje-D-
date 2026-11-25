@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav class="bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -9,7 +9,7 @@
                                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
                             </path>
                         </svg>
-                        Reciclaje Comunitario
+                        BarrioVerde
                     </a>
                 </div>
 
@@ -19,7 +19,7 @@
                         Inicio
                     </a>
 
-                    <a href="#"
+                    <a href="{{ route('categories.index') }}"
                         class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300">
                         Guía de Categorías
                     </a>
@@ -63,19 +63,20 @@
                 @else
                     <div class="space-x-4">
                         <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-gray-900 font-medium">Iniciar sesión</a>
-                        <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 transition">Registrarse</a>
+                        <a href="{{ route('register') }}"
+                            class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 transition">Registrarse</a>
                     </div>
                 @endauth
             </div>
 
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
+                <button type="button" data-mobile-menu-toggle aria-controls="mobile-menu" aria-expanded="false"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
+                        <path data-menu-icon="open" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
+                        <path data-menu-icon="close" class="hidden" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -83,13 +84,13 @@
         </div>
     </div>
 
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div id="mobile-menu" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <a href="{{ route('home') }}"
                 class="block w-full ps-3 pe-4 py-2 border-l-4 border-green-400 text-start text-base font-medium text-green-700 bg-green-50">
                 Inicio
             </a>
-            <a href="#"
+            <a href="{{ route('categories.index') }}"
                 class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50">
                 Guía de Categorías
             </a>
@@ -98,16 +99,26 @@
                 Puntos de Recepción
             </a>
         </div>
-        <div class="pt-3 pb-3 border-t border-gray-200 px-4">
+        <div class="border-t border-gray-200 pt-4 pb-3">
             @auth
-                <p class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</p>
-                <form method="POST" action="{{ route('logout') }}" class="mt-2">
-                    @csrf
-                    <button type="submit" class="text-base font-medium text-gray-600 hover:text-red-600">Cerrar sesión</button>
-                </form>
+                <div class="px-4">
+                    <p class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</p>
+                    <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                        @csrf
+                        <button type="submit" class="text-base font-medium text-gray-600 hover:text-red-600">Cerrar sesión</button>
+                    </form>
+                </div>
             @else
-                <a href="{{ route('login') }}" class="block py-2 text-base font-medium text-gray-600 hover:text-gray-800">Iniciar sesión</a>
-                <a href="{{ route('register') }}" class="block py-2 text-base font-medium text-green-700 hover:text-green-800">Registrarse</a>
+                <div class="space-y-1 px-4">
+                    <a href="{{ route('login') }}"
+                        class="block w-full rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                        Iniciar sesión
+                    </a>
+                    <a href="{{ route('register') }}"
+                        class="block w-full rounded-md bg-green-600 px-3 py-2 text-base font-semibold text-white hover:bg-green-700">
+                        Registrarse
+                    </a>
+                </div>
             @endauth
         </div>
     </div>

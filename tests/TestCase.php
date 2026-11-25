@@ -10,7 +10,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        // Las vistas usan @vite; en los tests no hace falta compilar el CSS.
+       
         $this->withoutVite();
     }
 }
